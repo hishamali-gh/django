@@ -128,3 +128,7 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+#  CUSTOM USER MODEL
+AUTH_USER_MODEL = 'core.User'
