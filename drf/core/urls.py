@@ -1,13 +1,23 @@
 # CLASS-BASED VIEWS
-# APIVIEW
+# GENERICAPIVIEW
 from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path('students/', views.StudentsGenericView.as_view(), name='students'),
+    path('students/<int:pk>/', views.StudentGenericView.as_view(), name='student')
+]
+
+# APIVIEW
+""" from django.urls import path
 
 from . import views
 
 urlpatterns = [
     path('students/', views.StudentsAPIView.as_view(), name='students'),
     path('students/<int:pk>/', views.StudentAPIView.as_view(), name='student')
-]
+] """
 
 # FUNCTTION-BASED VIEWS
 """ from django.urls import path

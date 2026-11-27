@@ -1,6 +1,21 @@
 # CLASS-BASED VIEWS
+# GENERICAPIVIEW
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework import filters
+
+from .models import Student
+from .serializers import StudentModelSerializer
+
+class StudentsGenericView(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentModelSerializer
+
+class StudentGenericView(RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentModelSerializer
+
 # APIVIEW
-from rest_framework.views import APIView
+""" from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -60,7 +75,7 @@ class StudentAPIView(APIView):
 
         student.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT) """
 
 # FUNCTION-BASED VIEWS
 """ from rest_framework.decorators import api_view
