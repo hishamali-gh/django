@@ -1,4 +1,69 @@
-from rest_framework.decorators import api_view
+# CLASS-BASED VIEWS
+# APIVIEW
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+
+from django.shortcuts import get_object_or_404
+
+from .serializers import StudentModelSerializer
+from .models import Student
+
+class StudentsAPIView(APIView):
+    def get(self, request):
+        students = Student.objects.all()
+        serializer = StudentModelSerializer(students, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = StudentModelSerializer(data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        student = serializer.save()
+
+        return Response({'message': f'{student.name} is created'}, status=status.HTTP_201_CREATED)
+
+class StudentAPIView(APIView):
+    def get_object(self, pk):
+        return get_object_or_404(Student, pk=pk)
+
+    def get(self, request, pk):
+        student = self.get_object(pk)
+        serializer = StudentModelSerializer(student)
+
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        student = self.get_object(pk)
+        serializer = StudentModelSerializer(student, data=request.data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response({'message': f'{student.name} is updated (PUT)'})
+
+    def patch(self, request, pk):
+        student = self.get_object(pk)
+        serializer = StudentModelSerializer(student, data=request.data, partial=True)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        return Response({'message': f'{student.name} is updated (PUT)'})
+
+    def delete(self, request, pk):
+        student = self.get_object(pk)
+
+        student.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# FUNCTION-BASED VIEWS
+""" from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -58,4 +123,4 @@ def students_view(request, pk=None):
     elif request.method == 'DELETE':
         student.delete()
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT) """
