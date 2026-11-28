@@ -1,12 +1,19 @@
 # CLASS-BASED VIEWS
 # GENERICAPIVIEW
-from django.urls import path
+from django.urls import path, include
+
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
+router = DefaultRouter()
+router.register('courses', views.CourseViewSet, basename='course')
+
 urlpatterns = [
     path('students/', views.StudentsGenericView.as_view(), name='students'),
-    path('students/<int:pk>/', views.StudentGenericView.as_view(), name='student')
+    path('students/<int:pk>/', views.StudentGenericView.as_view(), name='student'),
+
+    path('', include(router.urls))
 ]
 
 # APIVIEW

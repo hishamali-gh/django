@@ -1,7 +1,7 @@
 # MODELSERIALIZER
 from rest_framework import serializers
 
-from .models import Student
+from .models import Student, Course
 
 class StudentModelSerializer(serializers.ModelSerializer):
     is_adult = serializers.SerializerMethodField() # A custom computed field that doesn't exist in the database!
@@ -27,6 +27,11 @@ class StudentModelSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Name cannot contain numbers')
 
         return val
+
+class CourseModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = '__all__'
 
 # SERIALIZER (REGULAR)
 """ from rest_framework import serializers

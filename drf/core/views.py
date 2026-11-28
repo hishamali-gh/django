@@ -1,4 +1,14 @@
 # CLASS-BASED VIEWS
+# MODELVIEWSET
+from rest_framework.viewsets import ModelViewSet
+
+from .models import Course
+from .serializers import CourseModelSerializer
+
+class CourseViewSet(ModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseModelSerializer
+
 # GENERICAPIVIEW
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
@@ -15,18 +25,18 @@ class StudentPagination(CursorPagination):
     ordering = 'id'
 
 # Limit-Offset Pagination Config:
-""" # Uses the 'limit' and 'offset' query parameters.
+''' # Uses the 'limit' and 'offset' query parameters.
 # Works 'slicing' under the hood: Student.objects.all()[<offset>:<offset + limit>]
 
 class StudentPagination(LimitOffsetPagination):
     default_limit = 1
-    max_limit = 10 """
+    max_limit = 10 '''
 
 # Page Number Pagination Config:
-""" class StudentPagination(PageNumberPagination):
+''' class StudentPagination(PageNumberPagination):
     page_size = 1
     page_size_query_param = 'page_size'
-    max_page_size = 10 """
+    max_page_size = 10 '''
 
 class StudentsGenericView(ListCreateAPIView):
     queryset = Student.objects.all()
