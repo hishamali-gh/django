@@ -10,10 +10,12 @@ class StudentsGenericView(ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
 
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
 
     ordering_fields = ['name', 'age']  # Fields the clients are allowed to sort by
     ordering = ['name']  # The default ordering field if none is specified
+
+    search_fields = ['name', 'email']  # Fields the backend will look in
 
 class StudentGenericView(RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
