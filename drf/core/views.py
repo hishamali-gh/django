@@ -1,6 +1,7 @@
 # CLASS-BASED VIEWS
 # GENERICAPIVIEW
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination, CursorPagination
 from rest_framework import filters
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,14 +9,33 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Student
 from .serializers import StudentModelSerializer
 
+# Cursor Pagination Config:
+class StudentPagination(CursorPagination):
+    page_size = 1
+    ordering = 'id'
+
+# Limit-Offset Pagination Config:
+""" # Uses the 'limit' and 'offset' query parameters.
+# Works 'slicing' under the hood: Student.objects.all()[<offset>:<offset + limit>]
+
+class StudentPagination(LimitOffsetPagination):
+    default_limit = 1
+    max_limit = 10 """
+
+# Page Number Pagination Config:
+""" class StudentPagination(PageNumberPagination):
+    page_size = 1
+    page_size_query_param = 'page_size'
+    max_page_size = 10 """
+
 class StudentsGenericView(ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
 
     filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
 
-    ordering_fields = ['name', 'age']  # Fields the clients are allowed to sort by.
-    ordering = ['name']  # The default ordering field if none is specified.
+    ordering_fields = ['id', 'name', 'age']  # Fields the clients are allowed to sort by.
+    ordering = ['id', 'name']  # The default ordering field if none is specified.
 
     search_fields = ['name', 'email']  # Fields 'SearchFilter will look across (case-insensitive).
 
@@ -27,6 +47,8 @@ class StudentsGenericView(ListCreateAPIView):
         'age': ['exact', 'gte', 'lte'],  # Enables 'age=...', 'age__gte', and 'age__lte'.
         'email': ['iexact']  # Enables 'email__iexact'.
     }
+
+    pagination_class = StudentPagination
 
 class StudentGenericView(RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
