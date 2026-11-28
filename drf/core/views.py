@@ -3,6 +3,8 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework import filters
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .models import Student
 from .serializers import StudentModelSerializer
 
@@ -10,12 +12,21 @@ class StudentsGenericView(ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentModelSerializer
 
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter, DjangoFilterBackend]
 
-    ordering_fields = ['name', 'age']  # Fields the clients are allowed to sort by
-    ordering = ['name']  # The default ordering field if none is specified
+    ordering_fields = ['name', 'age']  # Fields the clients are allowed to sort by.
+    ordering = ['name']  # The default ordering field if none is specified.
 
-    search_fields = ['name', 'email']  # Fields the backend will look in
+    search_fields = ['name', 'email']  # Fields 'SearchFilter will look across (case-insensitive).
+
+    # filterset_fields = ['name', 'age', 'email']  # Exact fields 'django-filters' searches
+
+    # Using django-filter with specified lookups:
+    filterset_fields = {
+        'name': ['iexact', 'icontains'],  # Enables (only) 'name__iexact' and 'name__icontains' in the search bar!
+        'age': ['exact', 'gte', 'lte'],  # Enables 'age=...', 'age__gte', and 'age__lte'.
+        'email': ['iexact']  # Enables 'email__iexact'.
+    }
 
 class StudentGenericView(RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
